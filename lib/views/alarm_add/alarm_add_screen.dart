@@ -214,7 +214,7 @@ class _AlarmAddScreenState extends State<AlarmAddScreen> {
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
-                value: _selectedMusic.isEmpty ? null : _selectedMusic,
+                initialValue: _selectedMusic.isEmpty ? null : _selectedMusic,
                 decoration: const InputDecoration(
                   hintText: 'Select alarm sound',
                   border: OutlineInputBorder(),
