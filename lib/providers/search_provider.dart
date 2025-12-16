@@ -11,15 +11,12 @@ class SearchResult {
 }
 
 class SearchProvider with ChangeNotifier {
-  Set<String> _allTags = <String>{};
-
   Future<void> updateTags(
     TaskProvider taskProvider,
     AlarmProvider alarmProvider,
   ) async {
-    final taskTags = await taskProvider.getAllTags();
-    final alarmTags = await alarmProvider.getAllTags();
-    _allTags = taskTags.union(alarmTags);
+    final _ = await taskProvider.getAllTags();
+    final _ = await alarmProvider.getAllTags();
     notifyListeners();
   }
 

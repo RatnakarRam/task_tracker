@@ -20,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DateTime _selectedDate = DateTime.now();
-  String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -34,17 +33,13 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
+                body: Center(child: CircularProgressIndicator()),
               );
             }
 
             if (snapshot.hasError) {
               return Scaffold(
-                body: Center(
-                  child: Text('Error: ${snapshot.error}'),
-                ),
+                body: Center(child: Text('Error: ${snapshot.error}')),
               );
             }
 
@@ -67,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () async {
                       await appProvider.logout();
                       // Navigate to login screen on logout
+                      if (!context.mounted) return;
                       context.pushReplacement(AppRoutingConstants.loginRoute);
                     },
                   ),
@@ -94,7 +90,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: const Icon(Icons.chevron_left),
                           onPressed: () {
                             setState(() {
-                              _selectedDate = _selectedDate.subtract(const Duration(days: 1));
+                              _selectedDate = _selectedDate.subtract(
+                                const Duration(days: 1),
+                              );
                             });
                           },
                         ),
@@ -109,7 +107,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: const Icon(Icons.chevron_right),
                           onPressed: () {
                             setState(() {
-                              _selectedDate = _selectedDate.add(const Duration(days: 1));
+                              _selectedDate = _selectedDate.add(
+                                const Duration(days: 1),
+                              );
                             });
                           },
                         ),
@@ -141,7 +141,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            Text('${(dailyProgress * 100).round()}% completed today'),
+                            Text(
+                              '${(dailyProgress * 100).round()}% completed today',
+                            ),
                           ],
                         ),
                       ),
@@ -151,7 +153,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     // Tasks section
                     const Text(
                       'Tasks',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 10),
 
@@ -159,17 +164,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (taskCategories['carriedForward']!.isNotEmpty) ...[
                       const Text(
                         'Carried Forward',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.orange),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.orange,
+                        ),
                       ),
                       const SizedBox(height: 8),
-                      ...taskCategories['carriedForward']!.map((task) => _buildTaskItem(task, taskProvider)).toList(),
+                      ...taskCategories['carriedForward']!.map(
+                        (task) => _buildTaskItem(task, taskProvider),
+                      ),
                       const SizedBox(height: 15),
                     ],
 
                     // Current Tasks (Today)
                     const Text(
                       'Current Tasks',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.blue),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.blue,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     if (taskCategories['currentToday']!.isEmpty)
@@ -181,17 +196,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       )
                     else
-                      ...taskCategories['currentToday']!.map((task) => _buildTaskItem(task, taskProvider)).toList(),
+                      ...taskCategories['currentToday']!.map(
+                        (task) => _buildTaskItem(task, taskProvider),
+                      ),
                     const SizedBox(height: 15),
 
                     // Future Tasks
                     if (taskCategories['future']!.isNotEmpty) ...[
                       const Text(
                         'Future Tasks',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.green),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.green,
+                        ),
                       ),
                       const SizedBox(height: 8),
-                      ...taskCategories['future']!.map((task) => _buildTaskItem(task, taskProvider)).toList(),
+                      ...taskCategories['future']!.map(
+                        (task) => _buildTaskItem(task, taskProvider),
+                      ),
                     ],
                   ],
                 ),
@@ -261,7 +284,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showTaskOptions(BuildContext context, Task task, TaskProvider taskProvider) {
+  void _showTaskOptions(
+    BuildContext context,
+    Task task,
+    TaskProvider taskProvider,
+  ) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -281,6 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: const Text('Delete'),
                 onTap: () async {
                   await taskProvider.deleteTask(task.id);
+                  if (!context.mounted) return;
                   Navigator.pop(context);
                 },
               ),
@@ -289,7 +317,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   leading: const Icon(Icons.forward),
                   title: const Text('Carry Forward'),
                   onTap: () async {
-                    await taskProvider.updateTask(task.id, isCarriedForward: true);
+                    await taskProvider.updateTask(
+                      task.id,
+                      isCarriedForward: true,
+                    );
+                    if (!context.mounted) return;
                     Navigator.pop(context);
                   },
                 ),
@@ -308,7 +340,10 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (BuildContext context) {
         return FutureBuilder(
-          future: Future.wait([taskProvider.getAllTags(), alarmProvider.getAllTags()]),
+          future: Future.wait([
+            taskProvider.getAllTags(),
+            alarmProvider.getAllTags(),
+          ]),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return AlertDialog(
@@ -325,8 +360,8 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             Set<String> allTags = <Set<String>>[
-              snapshot.data![0] as Set<String>,
-              snapshot.data![1] as Set<String>,
+              snapshot.data![0],
+              snapshot.data![1],
             ].expand((set) => set).toSet();
 
             String query = '';
@@ -410,11 +445,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         if (query.isNotEmpty) {
                           final tasks = await taskProvider.searchTasks(query);
-                          final alarms = await alarmProvider.searchAlarms(query);
+                          final alarms = await alarmProvider.searchAlarms(
+                            query,
+                          );
 
                           // Convert to SearchResults
-                          results.addAll(tasks.map((task) => SearchResult(type: 'task', item: task)));
-                          results.addAll(alarms.map((alarm) => SearchResult(type: 'alarm', item: alarm)));
+                          results.addAll(
+                            tasks.map(
+                              (task) => SearchResult(type: 'task', item: task),
+                            ),
+                          );
+                          results.addAll(
+                            alarms.map(
+                              (alarm) =>
+                                  SearchResult(type: 'alarm', item: alarm),
+                            ),
+                          );
                         } else if (selectedTags.isNotEmpty) {
                           // If no query but tags are selected, search by tags
                           for (String tag in selectedTags) {
@@ -422,15 +468,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             final allTasks = await taskProvider.getAllTasks();
                             for (final task in allTasks) {
                               if (task.tags.contains(tag)) {
-                                results.add(SearchResult(type: 'task', item: task));
+                                results.add(
+                                  SearchResult(type: 'task', item: task),
+                                );
                               }
                             }
 
                             // Filter alarms by tag
-                            final allAlarms = await alarmProvider.getAllAlarms();
+                            final allAlarms = await alarmProvider
+                                .getAllAlarms();
                             for (final alarm in allAlarms) {
                               if (alarm.tags.contains(tag)) {
-                                results.add(SearchResult(type: 'alarm', item: alarm));
+                                results.add(
+                                  SearchResult(type: 'alarm', item: alarm),
+                                );
                               }
                             }
                           }
@@ -441,10 +492,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           final allTasks = await taskProvider.getAllTasks();
                           final allAlarms = await alarmProvider.getAllAlarms();
 
-                          results.addAll(allTasks.map((task) => SearchResult(type: 'task', item: task)));
-                          results.addAll(allAlarms.map((alarm) => SearchResult(type: 'alarm', item: alarm)));
+                          results.addAll(
+                            allTasks.map(
+                              (task) => SearchResult(type: 'task', item: task),
+                            ),
+                          );
+                          results.addAll(
+                            allAlarms.map(
+                              (alarm) =>
+                                  SearchResult(type: 'alarm', item: alarm),
+                            ),
+                          );
                         }
-
+                        if (!context.mounted) return;
                         Navigator.pop(context);
                         _showSearchResults(context, results);
                       },
@@ -496,8 +556,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   Task task = result.item;
                   return ListTile(
                     title: Text(task.title),
-                    subtitle: task.description != null ? Text(task.description!) : null,
-                    trailing: const Icon(Icons.check_circle, color: Colors.grey),
+                    subtitle: task.description != null
+                        ? Text(task.description!)
+                        : null,
+                    trailing: const Icon(
+                      Icons.check_circle,
+                      color: Colors.grey,
+                    ),
                     onTap: () {
                       Navigator.pop(context); // Close search results dialog
                       Navigator.pop(context); // Close search dialog

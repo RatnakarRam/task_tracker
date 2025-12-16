@@ -16,14 +16,16 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _tagController = TextEditingController();
-  List<Map<String, dynamic>> _tasks = [];
+  final List<Map<String, dynamic>> _tasks = [];
   DateTime? _selectedDate;
-  Set<String> _tags = <String>{};
+  final Set<String> _tags = <String>{};
 
   @override
   void initState() {
     super.initState();
-    _dateController.text = DateTime.now().toString().split(' ')[0]; // Format: YYYY-MM-DD
+    _dateController.text = DateTime.now().toString().split(
+      ' ',
+    )[0]; // Format: YYYY-MM-DD
   }
 
   @override
@@ -45,7 +47,8 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        _dateController.text = '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
+        _dateController.text =
+            '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
       });
     }
   }
@@ -75,7 +78,7 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
           'dueDate': _selectedDate ?? DateTime.now(),
           'tags': _tags.toList(),
         });
-        
+
         // Clear the form fields
         _titleController.clear();
         _descriptionController.clear();
@@ -92,7 +95,10 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
 
   void _saveTasks() {
     if (_tasks.isNotEmpty) {
-      Provider.of<TaskProvider>(context, listen: false).addMultipleTasks(_tasks);
+      Provider.of<TaskProvider>(
+        context,
+        listen: false,
+      ).addMultipleTasks(_tasks);
       Navigator.pop(context); // Go back to previous screen
     }
   }
@@ -206,7 +212,10 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                   ElevatedButton(
                     onPressed: _addTaskToList,
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 12,
+                      ),
                     ),
                     child: const Text('Add Task to List'),
                   ),
@@ -246,7 +255,10 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                                   ),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
                                   onPressed: () => _removeTask(index),
                                 ),
                               ],
@@ -265,10 +277,13 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                                 child: Wrap(
                                   spacing: 4,
                                   children: task['tags']
-                                      .map<Widget>((tag) => Chip(
-                                            label: Text(tag),
-                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                          ))
+                                      .map<Widget>(
+                                        (tag) => Chip(
+                                          label: Text(tag),
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                        ),
+                                      )
                                       .toList(),
                                 ),
                               ),

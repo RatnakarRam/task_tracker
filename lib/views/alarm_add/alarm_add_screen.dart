@@ -116,7 +116,7 @@ class _AlarmAddScreenState extends State<AlarmAddScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${_selectedTime.format(context)}',
+                        _selectedTime.format(context),
                         style: const TextStyle(fontSize: 16),
                       ),
                       const Icon(Icons.access_time),
@@ -280,7 +280,7 @@ class _AlarmAddScreenState extends State<AlarmAddScreen> {
 
               // Preview section
               Card(
-                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(

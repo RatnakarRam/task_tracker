@@ -21,7 +21,9 @@ class AlarmRepository {
   // Save all alarms
   Future<void> saveAlarms(List<Alarm> alarms) async {
     final prefs = await SharedPreferences.getInstance();
-    final alarmsJson = alarms.map((alarm) => jsonEncode(alarm.toJson())).toList();
+    final alarmsJson = alarms
+        .map((alarm) => jsonEncode(alarm.toJson()))
+        .toList();
     await prefs.setStringList(_alarmsKey, alarmsJson);
   }
 
@@ -67,7 +69,8 @@ class AlarmRepository {
   }
 
   // Update alarm
-  Future<void> updateAlarm(String alarmId, {
+  Future<void> updateAlarm(
+    String alarmId, {
     String? title,
     String? reason,
     TimeOfDay? time,
@@ -87,13 +90,27 @@ class AlarmRepository {
         reason: reason ?? alarm.reason,
         hour: time?.hour ?? alarm.hour,
         minute: time?.minute ?? alarm.minute,
-        monday: weekdays != null && weekdays.length > 0 ? weekdays[0] : alarm.monday,
-        tuesday: weekdays != null && weekdays.length > 1 ? weekdays[1] : alarm.tuesday,
-        wednesday: weekdays != null && weekdays.length > 2 ? weekdays[2] : alarm.wednesday,
-        thursday: weekdays != null && weekdays.length > 3 ? weekdays[3] : alarm.thursday,
-        friday: weekdays != null && weekdays.length > 4 ? weekdays[4] : alarm.friday,
-        saturday: weekdays != null && weekdays.length > 5 ? weekdays[5] : alarm.saturday,
-        sunday: weekdays != null && weekdays.length > 6 ? weekdays[6] : alarm.sunday,
+        monday: weekdays != null && weekdays.isNotEmpty
+            ? weekdays[0]
+            : alarm.monday,
+        tuesday: weekdays != null && weekdays.length > 1
+            ? weekdays[1]
+            : alarm.tuesday,
+        wednesday: weekdays != null && weekdays.length > 2
+            ? weekdays[2]
+            : alarm.wednesday,
+        thursday: weekdays != null && weekdays.length > 3
+            ? weekdays[3]
+            : alarm.thursday,
+        friday: weekdays != null && weekdays.length > 4
+            ? weekdays[4]
+            : alarm.friday,
+        saturday: weekdays != null && weekdays.length > 5
+            ? weekdays[5]
+            : alarm.saturday,
+        sunday: weekdays != null && weekdays.length > 6
+            ? weekdays[6]
+            : alarm.sunday,
         musicUri: musicUri ?? alarm.musicUri,
         isActive: isActive ?? alarm.isActive,
         tags: tags ?? alarm.tags,
@@ -117,14 +134,22 @@ class AlarmRepository {
   bool isAlarmScheduledForDay(Alarm alarm, int dayOfWeek) {
     // dayOfWeek: 1 = Monday, 7 = Sunday (DateTime.weekday convention)
     switch (dayOfWeek) {
-      case 1: return alarm.monday;
-      case 2: return alarm.tuesday;
-      case 3: return alarm.wednesday;
-      case 4: return alarm.thursday;
-      case 5: return alarm.friday;
-      case 6: return alarm.saturday;
-      case 7: return alarm.sunday;
-      default: return false;
+      case 1:
+        return alarm.monday;
+      case 2:
+        return alarm.tuesday;
+      case 3:
+        return alarm.wednesday;
+      case 4:
+        return alarm.thursday;
+      case 5:
+        return alarm.friday;
+      case 6:
+        return alarm.saturday;
+      case 7:
+        return alarm.sunday;
+      default:
+        return false;
     }
   }
 

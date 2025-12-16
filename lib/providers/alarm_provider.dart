@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../models/alarm_model.dart';
@@ -47,7 +46,8 @@ class AlarmProvider with ChangeNotifier {
   }
 
   // Update an alarm
-  Future<void> updateAlarm(String alarmId, {
+  Future<void> updateAlarm(
+    String alarmId, {
     String? title,
     String? reason,
     TimeOfDay? time,
@@ -108,8 +108,11 @@ class AlarmProvider with ChangeNotifier {
     return allAlarms.where((alarm) {
       // Search in title, reason, and tags
       final matchesTitle = alarm.title.toLowerCase().contains(lowerQuery);
-      final matchesReason = alarm.reason?.toLowerCase().contains(lowerQuery) ?? false;
-      final matchesTag = alarm.tags.any((tag) => tag.toLowerCase().contains(lowerQuery));
+      final matchesReason =
+          alarm.reason?.toLowerCase().contains(lowerQuery) ?? false;
+      final matchesTag = alarm.tags.any(
+        (tag) => tag.toLowerCase().contains(lowerQuery),
+      );
 
       return matchesTitle || matchesReason || matchesTag;
     }).toList();
